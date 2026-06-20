@@ -571,12 +571,16 @@ void m3Back(int speed, int timeMs) {
 void m4Forward(int speed, int timeMs) {
     if (stopMissionFlag) return;
     digitalWrite(Pin_Motor_4_IN1, LOW); digitalWrite(Pin_Motor_4_IN2, HIGH);
-    ledcWrite(3, speed); checkStopDelay(timeMs); stopAttachment();
+    ledcWrite(3, speed);
+ checkStopDelay(timeMs); 
+stopAttachment();
 }
 void m4Back(int speed, int timeMs) {
     if (stopMissionFlag) return;
     digitalWrite(Pin_Motor_4_IN1, HIGH); digitalWrite(Pin_Motor_4_IN2, LOW);
-    ledcWrite(3, speed); checkStopDelay(timeMs); stopAttachment();
+    ledcWrite(3, speed);
+ checkStopDelay(timeMs); 
+stopAttachment();
 }
 
 void resetEncoders() {
@@ -584,9 +588,9 @@ void resetEncoders() {
     m3EncoderCount = 0;
 }
 
-// ======================== МИСИИ ========================
+// мисии 
 void run1() {
-    resetEncoders(); Serial.println("СТАРТ: Run 1 - Osnoven");
+    resetEncoders(); 
     move(64, 100, 'F');
     checkStopDelay(500);
     turn(87, 70);
@@ -601,7 +605,7 @@ void run1() {
 }
 
 void run2() {
-    resetEncoders(); Serial.println("СТАРТ: Run 2 - Misiq 2");
+    resetEncoders();
     move(87, 100, 'F');
     checkStopDelay(500);
     turn(67, 70);
@@ -619,20 +623,20 @@ void run2() {
 }
 
 void run3() {
-    resetEncoders(); Serial.println("СТАРТ: Run 3 - Cana Pernik");
+    resetEncoders();
     move(8, 100, 'F');
     moveBack(10, 100);
 }
 
 void run4() {
-    resetEncoders(); Serial.println("СТАРТ: Run 4 - Kubce av");
+    resetEncoders(); 
     turn(8, 70);
     move(21, 100, 'F');
     moveBack(27, 100);
 }
 
 void run5() {
-    resetEncoders(); Serial.println("СТАРТ: Run 5 - Vzemi casata");
+    resetEncoders(); 
     checkStopDelay(500);
     move(55, 100, 'F');
     checkStopDelay(500);
@@ -650,14 +654,14 @@ void run5() {
 }
 
 void run6() {
-    resetEncoders(); Serial.println("СТАРТ: Run 6 - Musala");
+    resetEncoders(); 
     turn(-35, 70);
     move(2, 100, 'F');
     moveBack(8, 100);
 }
 
 void run8() {
-    resetEncoders(); Serial.println("СТАРТ: Run 8 - Ostani casa");
+    resetEncoders(); 
     checkStopDelay(500);
     move(52, 100, 'F');
     checkStopDelay(500);
@@ -672,14 +676,12 @@ void run8() {
     moveBack(55, 100);
 }
 
-// ======================== ИЗПЪЛНЕНИЕ НА МИСИЯ ПО НОМЕР ========================
+// меню система 
 void executeRun(int missionNumber, int speedLevel) {
     stopMissionFlag = false;
 
     Serial.printf("\n>>> СТАРТ НА МИСИЯ %d (Скорост ниво: %d) <<<\n", missionNumber, speedLevel);
-
-    // Тук свързваме числата от матрицата с реалните мисии.
-    // Разширете switch-а когато добавяте нови мисии!
+
     switch (missionNumber) {
         case 1:  run1(); break;
         case 2:  run2(); break;
@@ -688,7 +690,7 @@ void executeRun(int missionNumber, int speedLevel) {
         case 5:  run5(); break;
         case 6:  run6(); break;
         case 7:  run8(); break;
-        // Добавете тук нови case-ове за числата в матрицата
+       
         default:
             Serial.printf("Мисия %d не е дефинирана!\n", missionNumber);
             break;
@@ -705,7 +707,7 @@ void executeRun(int missionNumber, int speedLevel) {
     stopAttachment();
 }
 
-// ======================== SETUP ========================
+// код който се рънва само веднъж
 void setup() {
     Serial.begin(115200);
     delay(500);
@@ -746,8 +748,9 @@ void setup() {
     // Енкодери
     pinMode(ENC_Left_C1,  INPUT_PULLUP); pinMode(ENC_Left_C2,  INPUT_PULLUP);
     pinMode(ENC_Right_C1, INPUT_PULLUP); pinMode(ENC_Right_C2, INPUT_PULLUP);
-    pinMode(ENC_M3_C1, INPUT); pinMode(ENC_M3_C2, INPUT);
-    // ENC_M4 е изключен — пинове 34/35 са за потенциометрите
+    pinMode(ENC_M3_C1, INPUT); 
+pinMode(ENC_M3_C2, INPUT);
+    
 
     attachInterrupt(digitalPinToInterrupt(ENC_Left_C1),  readLeftEnc,  RISING);
     attachInterrupt(digitalPinToInterrupt(ENC_Right_C1), readRightEnc, RISING);
@@ -774,18 +777,17 @@ void setup() {
     }
 
     stopRobot();
-    Serial.println("=== ГОТОВО | Завъртете потенциометрите и натиснете Бутон 1 ===");
-}
+   
 
-// ======================== MAIN LOOP ========================
+// код който се изпълнява винаги
 void loop() {
     ArduinoOTA.handle();
 
-    // --- Четем потенциометрите ---
+    // Четем потенциометрите 
     int raw1 = analogRead(POT_1_PIN);
     int raw2 = analogRead(POT_2_PIN);
 
-    // Индекс за Пот 1 (избор на мисия, колона 0..4)
+    // рънове 
     int pot1_index = 0;
     if      (raw1 < 300)  pot1_index = 0;
     else if (raw1 < 1300) pot1_index = 1;
@@ -793,7 +795,7 @@ void loop() {
     else if (raw1 < 3000) pot1_index = 3;
     else                  pot1_index = 4;
 
-    // Индекс за Пот 2 (скорост, ред 0..3)
+    // скоростна кутия 
     int pot2_index = 0;
     if      (raw2 < 250)  pot2_index = 0;
     else if (raw2 < 1000) pot2_index = 1;
@@ -802,11 +804,9 @@ void loop() {
 
     // Крайното число от матрицата
     int finalNumber = missionMatrix[pot2_index][pot1_index];
-
-    // --- Четем бутоните ---
+
     uint8_t btns = readButtons();
 
-    // Бутон 1 (P4) -> СТАРТ на избраната мисия
     if (btns == 136) {
         executeRun(finalNumber, pot2_index + 1);
         delay(1000); // Дебънс след мисия
